@@ -17,7 +17,7 @@ class CIFAR10Classifier(LightningModule):
         return self.model(x)
     
     def configure_optimizers(self):
-        opt = Adam(self.parameters(), lr=1e-3)
+        opt = Adam(self.parameters(), lr=1e-4)
         return opt
     
     def training_step(self, batch):
@@ -42,7 +42,7 @@ class CIFAR10Classifier(LightningModule):
         
         return {'loss': loss, 'acc': acc}
     
-    def validation_epoch_end(self, outputs: EPOCH_OUTPUT | List[EPOCH_OUTPUT]) -> None:
+    def validation_epoch_end(self, outputs) -> None:
         avg_loss = torch.stack([x["loss"] for x in outputs]).mean()
         avg_acc = torch.stack([x["acc"] for x in outputs]).mean()
         self.log("val_loss", avg_loss, sync_dist=True)
